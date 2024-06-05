@@ -27,7 +27,7 @@
             height: 100%;
             background: url('https://raw.githubusercontent.com/michaelsalama1/gah/508899a752ceb2c9987ba444de30a69eafc8da55/nyc.svg') no-repeat center center;
             background-size: contain;
-            transform-origin: 0 0;
+            transform-origin: center center;
             cursor: grab;
         }
         .content {
@@ -58,22 +58,22 @@
     <script>
         let map = document.getElementById('map');
         let isDragging = false;
-        let startX, startY, initialX, initialY;
+        let startX, startY;
+        let initialX = 0, initialY = 0;
+        let scale = 1;
 
         map.addEventListener('mousedown', (e) => {
             isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            initialX = map.offsetLeft;
-            initialY = map.offsetTop;
+            startX = e.clientX - initialX;
+            startY = e.clientY - initialY;
             map.style.cursor = 'grabbing';
         });
 
         document.addEventListener('mousemove', (e) => {
             if (isDragging) {
-                let dx = e.clientX - startX;
-                let dy = e.clientY - startY;
-                map.style.transform = `translate(${initialX + dx}px, ${initialY + dy}px)`;
+                initialX = e.clientX - startX;
+                initialY = e.clientY - startY;
+                map.style.transform = `translate(${initialX}px, ${initialY}px) scale(${scale})`;
             }
         });
 
@@ -84,21 +84,26 @@
 
         map.addEventListener('wheel', (e) => {
             e.preventDefault();
-            let scale = 1;
             const zoomSpeed = 0.1;
-            if (e.deltaY < 0) {
-                scale += zoomSpeed;
-            } else {
-                scale -= zoomSpeed;
-            }
-            let rect = map.getBoundingClientRect();
-            let offsetX = (e.clientX - rect.left) / rect.width;
-            let offsetY = (e.clientY - rect.top) / rect.height;
+            const rect = map.getBoundingClientRect();
+            const offsetX = (e.clientX - rect.left) / rect.width;
+            const offsetY = (e.clientY - rect.top) / rect.height;
 
-            map.style.transformOrigin = `${offsetX * 100}% ${offsetY * 100}%`;
-            map.style.transform = `scale(${scale}) translate(${initialX}px, ${initialY}px)`;
+            const oldScale = scale;
+            scale += e.deltaY < 0 ? zoomSpeed : -zoomSpeed;
+            scale = Math.max(scale, 0.1); // Prevent zooming out too much
+
+            const newWidth = rect.width * scale;
+            const newHeight = rect.height * scale;
+            const dx = offsetX * (newWidth - rect.width);
+            const dy = offsetY * (newHeight - rect.height);
+
+            initialX -= dx / oldScale;
+            initialY -= dy / oldScale;
+
+            map.style.transformOrigin = 'center center';
+            map.style.transform = `translate(${initialX}px, ${initialY}px) scale(${scale})`;
         });
     </script>
 </body>
 </html>
-
