@@ -3,116 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage with SVG Background and Scrollama</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            font-family: Arial, sans-serif;
-        }
-        #map-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 42%;
-            background: url('https://raw.githubusercontent.com/michaelsalama1/gah/e9f63904edcc9a41221bdd9cee3f8ee3f5bcfb3d/Manhattan.svg') no-repeat center center;
-            background-size: cover;
-            transition: transform 0.5s ease;
-        }
-        .content {
-            position: relative;
-            z-index: 1;
-            color: black;
-            padding-left: 20px; /* Space from left edge */
-        }
-        .header {
-            font-size: 2.5em;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .subheader {
-            font-size: 1.5em;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .step {
-            opacity: 0.25;
-            transition: opacity 0.3s ease-in-out;
-            margin-bottom: 100vh; /* Space between steps */
-            text-align: left;
-            position: relative;
-        }
-        .step.is-active {
-            opacity: 1;
-            position: sticky;
-            top: 0;
-            margin-bottom: 0; /* Remove bottom margin when sticky */
-        }
-    </style>
+    <title>Scrollama Demo</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="map-container"></div>
-    <div class="content">
-        <div class="header">Out My Window: New York City</div>
-        <div class="subheader">Gail Albert Halaban</div>
-        <div class="step" data-step="1">Step 1: Soho</div>
-        <div class="step" data-step="2">Step 2: Nomad</div>
-        <div class="step" data-step="3">Step 3: The Village</div>
-        <div class="step" data-step="4">Step 4: Chinatown</div>
-        <div class="step" data-step="5">Step 5: Chelsea</div>
-        <div class="step" data-step="6">Step 6: Times Square</div>
+    <div class="container">
+        <div class="toc">
+            <ul>
+                <li><a href="#section1">Section 1</a></li>
+                <li><a href="#section2">Section 2</a></li>
+                <li><a href="#section3">Section 3</a></li>
+                <li><a href="#section4">Section 4</a></li>
+                <li><a href="#section5">Section 5</a></li>
+                <li><a href="#section6">Section 6</a></li>
+                <li><a href="#section7">Section 7</a></li>
+                <li><a href="#section8">Section 8</a></li>
+                <li><a href="#section9">Section 9</a></li>
+                <li><a href="#section10">Section 10</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <section id="section1" data-bg="image1.jpg">Section 1 Content</section>
+            <section id="section2" data-bg="image2.jpg">Section 2 Content</section>
+            <section id="section3" data-bg="image3.jpg">Section 3 Content</section>
+            <section id="section4" data-bg="image4.jpg">Section 4 Content</section>
+            <section id="section5" data-bg="image5.jpg">Section 5 Content</section>
+            <section id="section6" data-bg="image6.jpg">Section 6 Content</section>
+            <section id="section7" data-bg="image7.jpg">Section 7 Content</section>
+            <section id="section8" data-bg="image8.jpg">Section 8 Content</section>
+            <section id="section9" data-bg="image9.jpg">Section 9 Content</section>
+            <section id="section10" data-bg="image10.jpg">Section 10 Content</section>
+        </div>
     </div>
-
     <script src="https://unpkg.com/scrollama"></script>
-    <script>
-        // Initialize Scrollama
-        const scroller = scrollama();
-
-        // Variable to track zoom level
-        let zoomLevel = 1;
-
-        // Setup event handlers for Scrollama
-        function handleStepEnter(response) {
-            // Add is-active class to the current step
-            response.element.classList.add('is-active');
-        }
-
-        function handleStepExit(response) {
-            // Remove is-active class from the previous step
-            response.element.classList.remove('is-active');
-        }
-
-        function handleScrollDirection(event) {
-            // Check if scrolling up or down
-            const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
-            // Adjust zoom level based on scroll direction
-            zoomLevel += scrollDirection === 'down' ? 0.1 : -0.1;
-            // Limit zoom level to a minimum of 1
-            zoomLevel = Math.max(zoomLevel, 1);
-            // Apply zoom to the background image
-            document.getElementById('map-container').style.transform = `scale(${zoomLevel})`;
-        }
-
-        // Setup the scroller instance
-        scroller
-            .setup({
-                step: '.step',
-                offset: 0.5,
-                debug: false
-            })
-            .onStepEnter(handleStepEnter)
-            .onStepExit(handleStepExit);
-
-        // Add event listener for mousewheel event to handle zooming
-        window.addEventListener('wheel', handleScrollDirection);
-
-        // Resize listener to update Scrollama on window resize
-        window.addEventListener('resize', scroller.resize);
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
