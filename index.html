@@ -21,13 +21,14 @@
             height: 100%;
             background: url('https://raw.githubusercontent.com/michaelsalama1/gah/508899a752ceb2c9987ba444de30a69eafc8da55/nyc.svg') no-repeat center center;
             background-size: cover;
+            transition: transform 0.5s ease;
         }
         .content {
             position: relative;
             z-index: 1;
             color: white;
             text-align: center;
-            padding: 100vh 0; /* Space to scroll */
+            padding-top: 100vh; /* Initial space to start scrolling */
         }
         .header {
             font-size: 2.5em;
@@ -40,6 +41,7 @@
         .step {
             opacity: 0.25;
             transition: opacity 0.3s ease-in-out;
+            margin-bottom: 100vh; /* Space between steps */
         }
         .step.is-active {
             opacity: 1;
@@ -56,6 +58,7 @@
         <div class="step" data-step="3">Step 3: The Village</div>
         <div class="step" data-step="4">Step 4: Chinatown</div>
         <div class="step" data-step="5">Step 5: Chelsea</div>
+        <div class="step" data-step="6">Step 6: Times Square</div>
     </div>
 
     <script src="https://unpkg.com/scrollama"></script>
@@ -63,10 +66,16 @@
         // Initialize Scrollama
         const scroller = scrollama();
 
+        // Variables to track zoom level
+        let zoomLevel = 1;
+
         // Setup event handlers for Scrollama
         function handleStepEnter(response) {
             // Add is-active class to the current step
             response.element.classList.add('is-active');
+            // Increase zoom level
+            zoomLevel += 0.1;
+            document.getElementById('map-container').style.transform = `scale(${zoomLevel})`;
         }
 
         function handleStepExit(response) {
