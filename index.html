@@ -80,14 +80,22 @@
         function handleStepEnter(response) {
             // Add is-active class to the current step
             response.element.classList.add('is-active');
-            // Increase zoom level
-            zoomLevel += 0.1;
+            // Increase or decrease zoom level based on scroll direction
+            zoomLevel += response.direction === 'down' ? 0.1 : -0.1;
+            // Limit zoom level to a minimum of 1
+            zoomLevel = Math.max(zoomLevel, 1);
             document.getElementById('map-container').style.transform = `scale(${zoomLevel})`;
         }
 
         function handleStepExit(response) {
             // Remove is-active class from the previous step
             response.element.classList.remove('is-active');
+            // Reset zoom level and remove sticky positioning from the first step when scrolling up from the first step
+            if (response.direction === 'up' && response.index === 0) {
+                zoomLevel = 1;
+                document.getElementById('map-container').style.transform = `scale(${zoomLevel})`;
+                response.element.style.position = 'relative';
+            }
         }
 
         // Setup the scroller instance
