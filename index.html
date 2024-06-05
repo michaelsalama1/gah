@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage with SVG Background</title>
+    <title>Homepage with SVG Background and Scrollama</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
         }
-        body {
-            background: url('nyc.svg') no-repeat center center fixed;
+        #map-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/michaelsalama1/gah/508899a752ceb2c9987ba444de30a69eafc8da55/nyc.svg') no-repeat center center;
             background-size: cover;
         }
         .content {
@@ -21,31 +27,65 @@
             z-index: 1;
             color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
+            padding: 100vh 0; /* Space to scroll */
         }
         .header {
-            margin-top: 20%;
             font-size: 2.5em;
+            margin: 20px 0;
         }
         .subheader {
             font-size: 1.5em;
+            margin: 20px 0;
+        }
+        .step {
+            opacity: 0.25;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .step.is-active {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="overlay"></div>
+    <div id="map-container"></div>
     <div class="content">
-        <div class="header">Out my Window</div>
+        <div class="header">Out My Window: New York City</div>
         <div class="subheader">Gail Albert Halaban</div>
+        <div class="step" data-step="1">Step 1: Soho</div>
+        <div class="step" data-step="2">Step 2: Nomad</div>
+        <div class="step" data-step="3">Step 3: The Village</div>
+        <div class="step" data-step="4">Step 4: Chinatown</div>
+        <div class="step" data-step="5">Step 5: Chelsea</div>
     </div>
+
+    <script src="https://unpkg.com/scrollama"></script>
+    <script>
+        // Initialize Scrollama
+        const scroller = scrollama();
+
+        // Setup event handlers for Scrollama
+        function handleStepEnter(response) {
+            // Add is-active class to the current step
+            response.element.classList.add('is-active');
+        }
+
+        function handleStepExit(response) {
+            // Remove is-active class from the previous step
+            response.element.classList.remove('is-active');
+        }
+
+        // Setup the scroller instance
+        scroller
+            .setup({
+                step: '.step',
+                offset: 0.5,
+                debug: false
+            })
+            .onStepEnter(handleStepEnter)
+            .onStepExit(handleStepExit);
+
+        // Resize listener to update Scrollama on window resize
+        window.addEventListener('resize', scroller.resize);
+    </script>
 </body>
 </html>
