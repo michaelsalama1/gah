@@ -11,29 +11,34 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
         }
-        body {
-            background: url('https://raw.githubusercontent.com/michaelsalama1/gah/508899a752ceb2c9987ba444de30a69eafc8da55/nyc.svg') no-repeat center center fixed;
-            background-size: cover;
+        #map-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/michaelsalama1/gah/508899a752ceb2c9987ba444de30a69eafc8da55/nyc.svg') no-repeat center center;
+            background-size: contain;
+            transform-origin: 0 0;
+            cursor: grab;
         }
         .content {
-            position: relative;
+            position: absolute;
             z-index: 1;
             color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
         }
         .header {
-            margin-top: 20%;
+            margin-top: 20px;
             font-size: 2.5em;
         }
         .subheader {
@@ -42,10 +47,58 @@
     </style>
 </head>
 <body>
-    <div class="overlay"></div>
-    <div class="content">
-        <div class="header">Welcome to Our Website</div>
-        <div class="subheader">Explore the beauty of NYC</div>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="content">
+            <div class="header">Welcome to Our Website</div>
+            <div class="subheader">Explore the beauty of NYC</div>
+        </div>
     </div>
+
+    <script>
+        let map = document.getElementById('map');
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+
+        map.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialX = map.offsetLeft;
+            initialY = map.offsetTop;
+            map.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+                map.style.transform = `translate(${initialX + dx}px, ${initialY + dy}px)`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            map.style.cursor = 'grab';
+        });
+
+        map.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            let scale = 1;
+            const zoomSpeed = 0.1;
+            if (e.deltaY < 0) {
+                scale += zoomSpeed;
+            } else {
+                scale -= zoomSpeed;
+            }
+            let rect = map.getBoundingClientRect();
+            let offsetX = (e.clientX - rect.left) / rect.width;
+            let offsetY = (e.clientY - rect.top) / rect.height;
+
+            map.style.transformOrigin = `${offsetX * 100}% ${offsetY * 100}%`;
+            map.style.transform = `scale(${scale}) translate(${initialX}px, ${initialY}px)`;
+        });
+    </script>
 </body>
 </html>
+
