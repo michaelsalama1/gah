@@ -26,7 +26,7 @@
         .content {
             position: relative;
             z-index: 1;
-            color: white;
+            color: black;
             padding-top: 100vh; /* Initial space to start scrolling */
             padding-left: 20px; /* Space from left edge */
         }
@@ -93,7 +93,7 @@
             // Adjust zoom level based on scroll direction
             zoomLevel += scrollDirection === 'down' ? 0.1 : -0.1;
             // Limit zoom level to a minimum of 1
-            zoomLevel = Math.max(zoomLevel, 1);
+            zoomLevel =  sMath.max(zoomLevel, 1);
             // Apply zoom to the background image
             document.getElementById('map-container').style.transform = `scale(${zoomLevel})`;
         }
